@@ -1,6 +1,5 @@
 package repository;
 
-import lombok.AllArgsConstructor;
 import models.Usuario;
 import org.hibernate.SessionFactory;
 

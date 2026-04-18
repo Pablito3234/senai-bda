@@ -2,10 +2,11 @@ package view;
 
 import models.Usuario;
 
-import java.util.Optional;
+import java.util.Scanner;
 
 public class MainMenu {
     public static void getMainMenu(Usuario loggedUser){
+        Scanner sc = new Scanner(System.in);
         String mensagem = "";
         if (loggedUser != null){
             mensagem = """
