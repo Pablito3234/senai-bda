@@ -1,6 +1,8 @@
 package repository;
 
+import jakarta.persistence.RollbackException;
 import lombok.AllArgsConstructor;
+import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 
@@ -9,7 +11,7 @@ public abstract class GenericRepository<Entity> {
     protected SessionFactory sessionFactory;
     private Class<Entity> tClass;
 
-    public void salvar(Entity entity){
+    public void salvar(Entity entity) throws RollbackException {
         try(Session session = sessionFactory.openSession()) {
             session.beginTransaction();
             session.persist(entity);
