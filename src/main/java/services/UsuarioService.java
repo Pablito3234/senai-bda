@@ -1,5 +1,6 @@
 package services;
 
+import jakarta.persistence.RollbackException;
 import models.Usuario;
 import org.hibernate.SessionFactory;
 import repository.UsuarioRepository;
@@ -23,6 +24,19 @@ public class UsuarioService {
         if ((dataNascimento == null)){
             throw new IllegalArgumentException("Deve ter Data de nascimento");
         }
-        usuarioRepository.salvar(new Usuario(nome, email, dataNascimento));
+        try {
+            usuarioRepository.salvar(new Usuario(nome, email, dataNascimento));
+        } catch (RollbackException e) {
+            throw new RuntimeException("Aconteceu um erro ao salvar o usuario: " + e.getMessage());
+        }
+    }
+
+    public boolean isUsuarioLogado(String email){
+        Usuario queryUsuario = usuarioRepository.buscarPorEmail(email);
+        return queryUsuario != null;
+    }
+
+    public Usuario buscarPorEmail(String email){
+        return usuarioRepository.buscarPorEmail(email);
     }
 }

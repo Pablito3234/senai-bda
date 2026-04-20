@@ -5,15 +5,20 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CurrentTimestamp;
 
-import java.util.List;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Getter
 @NoArgsConstructor
 public class Usuario {
-    @EmbeddedId
-    private UsuarioId usuarioId;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(nullable = false, unique = true)
+    private String email;
 
     @Column(nullable = false)
     private String nome;
@@ -29,8 +34,8 @@ public class Usuario {
     private Date dataCadastro;
 
     public Usuario(String nome, String email, Date dataNascimento) {
-        this.usuarioId = new UsuarioId(email);
         this.nome = nome;
+        this.email = email;
         this.dataNascimento = dataNascimento;
     }
 }
