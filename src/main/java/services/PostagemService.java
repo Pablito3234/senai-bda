@@ -6,6 +6,8 @@ import models.Usuario;
 import org.hibernate.SessionFactory;
 import repository.PostagemRepository;
 
+import java.util.List;
+
 public class PostagemService {
     private final PostagemRepository postagemRepository;
 
@@ -42,7 +44,7 @@ public class PostagemService {
         if (postagemAchada == null){
             throw new IllegalArgumentException("Esta postagem não existe!");
         }
-        if (!postagemAchada.getUsuario().equals(usuario)){
+        if (!postagemAchada.getUsuario().getId().equals(usuario.getId())){
             throw new IllegalArgumentException("Voce não é o dono desta postagem!");
         }
 
@@ -53,12 +55,19 @@ public class PostagemService {
         if (usuario == null){
             throw new IllegalArgumentException("O usuario deve estar logado para listar postagens");
         }
-        if (usuario.getPostagens().isEmpty()){
+
+        List<Postagem> postagensUsuario = postagemRepository.listarPorUsuarioId(usuario.getId());
+
+        if (postagensUsuario.isEmpty()){
             return "Você não tem postagens";
         }
+
         StringBuilder postagens = new StringBuilder();
-        for (Postagem postagem : usuario.getPostagens()){
-            postagens.append(postagem.getId()).append(" - ").append(postagem.getConteudo()).append("\n");
+        for (Postagem postagem : postagensUsuario){
+            postagens.append(postagem.getId())
+                    .append(" - ")
+                    .append(postagem.getConteudo())
+                    .append("\n");
         }
         return postagens.toString();
     }

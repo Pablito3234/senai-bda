@@ -9,17 +9,21 @@ import java.util.Scanner;
 public class MainMenu {
     public static void getMainMenu(Usuario loggedUser, Scanner sc, UsuarioService usuarioService, PostagemService postagemService) {
         while (true) {
-            if (loggedUser == null) {
-                loggedUser = processarMenuDeslogado(sc, usuarioService);
+            try {
                 if (loggedUser == null) {
+                    loggedUser = processarMenuDeslogado(sc, usuarioService);
+                    if (loggedUser == null) {
+                        return;
+                    }
+                    continue;
+                }
+
+                if (processarMenuLogado(loggedUser, sc, postagemService)) {
+                    System.out.println("Saindo...");
                     return;
                 }
-                continue;
-            }
-
-            if (processarMenuLogado(loggedUser, sc, postagemService)) {
-                System.out.println("Saindo...");
-                return;
+            } catch (RuntimeException e) {
+                System.out.println("Erro ao processar ação: " + e.getMessage() + "\n");
             }
         }
     }

@@ -1,8 +1,7 @@
 package models;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.CurrentTimestamp;
 
@@ -11,6 +10,9 @@ import java.time.LocalDateTime;
 
 @Entity
 @Getter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Postagem {
     public Postagem(String conteudo, Usuario usuario) {
         this.conteudo = conteudo;
