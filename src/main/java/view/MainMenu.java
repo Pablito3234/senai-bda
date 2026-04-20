@@ -9,52 +9,67 @@ import java.util.Scanner;
 public class MainMenu {
     public static void getMainMenu(Usuario loggedUser, Scanner sc, UsuarioService usuarioService, PostagemService postagemService) {
         while (true) {
-            if (loggedUser != null) {
-                System.out.printf("%nBem-vindo, %s!%n", loggedUser.getNome());
-                System.out.println("""
-                        Opções
-                        1 - Criar Postagem
-                        2 - Deletar Postagem
-                        3 - Listar Postagens
-                        4 - Sair
-                        """);
-            } else {
-                System.out.println("""
-                        Você não está logado
-                        1 - Logar/Cadastrar
-                        2 - Sair
-                        """);
+            if (loggedUser == null) {
+                loggedUser = processarMenuDeslogado(sc, usuarioService);
+                if (loggedUser == null) {
+                    return;
+                }
+                continue;
             }
 
-            System.out.print("Escolha: ");
-            String opcao = sc.nextLine().trim();
-
-            if (loggedUser == null) {
-                switch (opcao) {
-                    case "1" -> {
-                        Usuario usuarioLogado = UsuarioView.telaLogin(sc, usuarioService);
-                        if (usuarioLogado != null){
-                            getMainMenu(usuarioLogado, sc, usuarioService, postagemService);
-                        }
-                    }
-                    case "2" -> {
-                        System.out.println("Saindo...");
-                        return;
-                    }
-                    default -> System.out.println("Opção inválida.");
-                }
-            } else {
-                switch (opcao) {
-                    case "1" -> PostagemView.getPostagemMenu(loggedUser, sc);
-//                    case "2" -> System.out.println("(Deletar postagem - não implementado)");
-//                    case "3" -> System.out.println("(Listar postagens - não implementado)");
-                    case "4" -> {
-                        System.out.println("Saindo...");
-                        return;
-                    }
-                    default -> System.out.println("Opção inválida.");
-                }
+            if (processarMenuLogado(loggedUser, sc, postagemService)) {
+                System.out.println("Saindo...");
+                return;
             }
         }
+    }
+
+    private static Usuario processarMenuDeslogado(Scanner sc, UsuarioService usuarioService) {
+        exibirMenuDeslogado();
+        String opcao = lerOpcao(sc);
+
+        return switch (opcao) {
+            case "1" -> UsuarioView.telaLogin(sc, usuarioService);
+            case "2" -> null;
+            default -> {
+                System.out.println("Opção inválida.\n");
+                yield null;
+            }
+        };
+    }
+
+    private static boolean processarMenuLogado(Usuario loggedUser, Scanner sc, PostagemService postagemService) {
+        exibirMenuLogado(loggedUser);
+        String opcao = lerOpcao(sc);
+
+        return switch (opcao) {
+            case "1" -> {
+                PostagemView.getPostagemMenu(loggedUser, sc, postagemService);
+                yield false;
+            }
+            case "2" -> true;
+            default -> {
+                System.out.println("Opção inválida.\n");
+                yield false;
+            }
+        };
+    }
+
+    private static void exibirMenuDeslogado() {
+        System.out.println("\nVocê não está logado");
+        System.out.println("1 - Logar/Cadastrar");
+        System.out.println("2 - Sair");
+    }
+
+    private static void exibirMenuLogado(Usuario loggedUser) {
+        System.out.printf("%nBem-vindo, %s!%n", loggedUser.getNome());
+        System.out.println("Opções");
+        System.out.println("1 - Gerenciar Postagens");
+        System.out.println("2 - Sair");
+    }
+
+    private static String lerOpcao(Scanner sc) {
+        System.out.print("Escolha: ");
+        return sc.nextLine().trim();
     }
 }

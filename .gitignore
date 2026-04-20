@@ -37,3 +37,4 @@ build/
 
 # Project Configuration
 **/hibernate.properties
+**/hibernate.cfg.xml
