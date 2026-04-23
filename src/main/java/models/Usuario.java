@@ -29,9 +29,6 @@ public class Usuario {
     @Column(name = "data_nascimento")
     private Date dataNascimento;
 
-    @OneToMany(mappedBy = "usuario")
-    private List<Postagem> postagens;
-
     @Getter
     @CurrentTimestamp
     @Column(name = "data_cadastro", nullable = false)

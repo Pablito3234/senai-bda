@@ -8,7 +8,7 @@ import repository.PostagemRepository;
 
 import java.util.List;
 
-public class PostagemService {
+public class PostagemService implements Service{
     private final PostagemRepository postagemRepository;
 
     public PostagemService(SessionFactory sessionFactory) {

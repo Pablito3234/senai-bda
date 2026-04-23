@@ -4,10 +4,12 @@ import jakarta.persistence.RollbackException;
 import models.Usuario;
 import org.hibernate.SessionFactory;
 import repository.UsuarioRepository;
+import utils.CSVUtils;
 
 import java.util.Date;
+import java.util.List;
 
-public class UsuarioService {
+public class UsuarioService implements Service{
     private final UsuarioRepository usuarioRepository;
 
     public UsuarioService(SessionFactory sessionFactory) {
@@ -38,5 +40,10 @@ public class UsuarioService {
 
     public Usuario buscarPorEmail(String email){
         return usuarioRepository.buscarPorEmail(email);
+    }
+
+    public void exportarUsuariosParaCsv(String caminhoArquivo) {
+        List<Usuario> usuarios = usuarioRepository.listarTodos();
+        CSVUtils.exportarUsuarios(usuarios, caminhoArquivo);
     }
 }
